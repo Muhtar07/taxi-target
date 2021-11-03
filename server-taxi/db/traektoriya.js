@@ -56,7 +56,7 @@ class Traektoria {
   }
 
   getCurrentCoordinate() {
-    return this.currentCoords;// 
+    return this.currentCoords;
   }
 }
 

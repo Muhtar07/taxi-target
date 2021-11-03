@@ -21,7 +21,9 @@ const useStyles = makeStyles((theme) => ({
     height: '1px',
     margin: '-1px',
     '&:checked + img': {
-      borderColor: 'purple'
+      borderColor: '#6DD5FA',
+      boxShadow: '0 0 10px rgba(0,0,0,0.9)',
+
     },
   },
   root: {
@@ -127,6 +129,7 @@ function ModalPict({open, idRange, handleClose}) {
       arr.push({advertisement_id: element.id, range_id: idRange})
     });
     setImages(arr);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const picsId = ads.map( el => el.id);
   const allAds = allAdsRedux.filter((elem) => {
@@ -139,6 +142,7 @@ function ModalPict({open, idRange, handleClose}) {
     // const images = Object.fromEntries( new FormData(e.target));
     console.log(images);
     dispatch(updateRangeAction(images, idRange));
+    handleClose();
   }
   function switchHandler(id, checked) {
     console.log(id, checked);
