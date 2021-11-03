@@ -11,11 +11,7 @@ import LocalTaxiIcon from '@material-ui/icons/LocalTaxi';
 import { Link, useHistory } from "react-router-dom"
 import { logoutUser } from '../../redux/actions/userAction';
 
-
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   title: {
     flexGrow: 1,
   },
@@ -31,26 +27,27 @@ function Navbar() {
 
   const logoutHandler = () => {
     dispatch(logoutUser())
+    console.log(document.cookie);
     history.push('/')
   }
 
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position="static">
         {user &&
           <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-              <Link to="/" className={style.super_puper_link}>
-              <LocalTaxiIcon />
-              </Link>
-            </IconButton>
+            <Link to="/" className={style.super_puper_link}>
+              <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                  <LocalTaxiIcon />
+              </IconButton>
+            </Link>
             <Typography variant="h6" className={classes.title}>
-              Taxi-target
-        </Typography>
+              <Link to={'/admin'}>Taxi-target</Link>
+          </Typography>
+            {/* <Link className={style.super_puper_link} to="сabinet"><Button color="inherit">Личный кабинет</Button></Link> */}
             <Link className={style.super_puper_link} to="karta"><Button color="inherit">Карта</Button></Link>
-            <Link className={style.super_puper_link} to="history"><Button color="inherit">История</Button></Link>
             <Button onClick={logoutHandler} color="inherit">Выйти</Button>
           </Toolbar>
         }
@@ -63,7 +60,7 @@ function Navbar() {
               Taxi-target
       </Typography>
             <Link className={style.super_puper_link} to="/signin"><Button color="inherit">Войти</Button></Link>
-            <Link className={style.super_puper_link} to="/signup"><Button color="inherit">Зарегистрироваться</Button></Link>
+            <Link style={{ textDecoration: 'none', color: 'white' }} to="/signup"><Button color="inherit">Зарегистрироваться</Button></Link>
           </Toolbar>
         }
       </AppBar>

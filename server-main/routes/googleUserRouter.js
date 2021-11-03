@@ -1,53 +1,53 @@
 require('dotenv').config();
 const router = require('express').Router();
 const passport = require('passport');
+const { v4: uuidv4 } = require('uuid');
 const { User } = require('../db/models');
 
 router.get('/main', async (req, res) => {
-
-
   if (req?.session?.passport) {
     res.locals.name = req.session.passport.user.displayName;
   }
   res.render('main');
-
-
 });
 
-
-router.get(
-  '/signIn',
+router.get('/signIn',
   passport.authenticate('google', {
     scope: ['email', 'profile'],
+    prompt : "select_account",
   })
 )
 
-router.get(
-  '/signIn/callback',
+router.get('/signIn/callback',
+//  ()=>{console.log( console.log(process.env.ORIGIN));},
   passport.authenticate('google', {
     failureRedirect: '/signIn',
     successRedirect: `${process.env.ORIGIN}`,
   })
 );
 
-router.get('/logOut', (req, res) => {
+router.get('/logOut', async (req, res) => {
   req.session.destroy();
-  res.clearCookie('sId').json({ fucker: 'FATHERFUCKER' })
+  req.logout();
+  // res.clearCookie('sId').json('OK');
+  res.clearCookie('*', {path: '/'}).json('OK');
 
 });
 
 router.get('/checkAuth', async (req, res) => {
   if (req?.user) {
     try {
-      const findUser = await User.findOne({ where: { email: req?.user.emails[0].value } });
-      if (req?.user.emails[0].value === findUser?.email) {
+      const profile = req.user;
+      const findUser = await User.findOne({ where: { email: profile.emails[0].value } });
+      console.log(findUser);
+      if (profile.emails[0].value === findUser?.email) {
         return res.json(findUser);
       }
+      console.log(req.user);
       const newUser = await User.create({
-        email: req.user.emails[0].value,
-        firstname: req.user.name.givenName,
-        lastname: req.user.name.familyName,
-        avatar: req.user.photos[0].value,
+        email: profile.emails[0].value,
+        name: profile.name.givenName,
+        password: uuidv4()
       });
       return res.json(newUser);
     } catch (error) {
